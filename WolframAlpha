@@ -1,0 +1,73 @@
+import java.util.*;
+import java.io.*;
+
+
+public class UserInput {
+	public static void main(String[]args){
+		
+		WolframAlpha WOLFRAM_ALPHA = new WolframAlpha("URLLT6-GGL5W5953Q");
+		
+	// 1.Prompts the user to ask a question.
+		System.out.println("Please Enter a query for Wolfram Alpha");
+	// 2. Instructs the computer to use the user's input.
+		Scanner scanner = new Scanner(System.in); 
+	// 3. Turns the input into a string called 'question'
+		String question = scanner.nextLine(); 
+	// 4. Allows users to check for previous questions
+		System.out.println("For a list of old questions, please type 'Previous Questions' below: ");
+		String previousQuestions = scanner.nextLine();
+		
+		
+		
+    // 'question' is queried to W.A and returns with relevant HTML page, called 'response'.
+		String response = WOLFRAM_ALPHA.query(question);
+    // The <sectioncontents> tag was chosen to split the returned W.A HTML page into an array.
+		String[] tokens = response.split("<sectioncontents>"); // 
+		String answer = tokens[2]; //The answer was identified to always be within the 3rd <sectioncontents> tag, so location [2].
+		
+	// Since Answer still contains HTML tags, the response from W.A will be split again to remove the tags starting at : </sectioncontents>.
+		String[] moreTokens = answer.split("</sectioncontents>");
+		String parsedAnswer = moreTokens[0]; 
+	// the requires answers are located at location [0] so string is created to reflect this.
+		System.out.println(parsedAnswer + " "); // The addition of space allows for easier viewing in the answer file
+		
+	
+		
+		
+		
+    // This will store the queries from the user into a list file
+		try{
+		BufferedWriter writer;
+			writer = new BufferedWriter(new FileWriter("Questions.list", true)); //Creates a list file to hold questions asked by users
+			String questionFile = question;
+			writer.newLine();
+			writer.write(questionFile); //Adds the question into the questions file
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+	// This will store the parsed answer in a list file
+		try {
+		BufferedWriter answerWriter;
+				answerWriter = new BufferedWriter(new FileWriter("Answers.list", true)); // Creates a List file to store the answers in.
+				String answerFile = parsedAnswer;
+				answerWriter.newLine();
+				answerWriter.write(answerFile); // adds the parsed answer into the answers file.
+				answerWriter.close(); // Closes the File.
+			} catch (IOException e) { 
+				e.printStackTrace();
+			}
+	
+		
+	// This section will provide a print out of the previously asked questions
+		
+		
+		
+	
+		
+	}
+}
